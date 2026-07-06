@@ -1,0 +1,46 @@
+aws_region   = "us-east-1"
+project_name = "bookstore"
+environment  = "dev"
+
+availability_zones     = ["us-east-1a", "us-east-1b"]
+vpc_cidr                = "10.0.0.0/16"
+public_subnet_cidrs    = ["10.0.0.0/24", "10.0.1.0/24"]
+private_subnet_cidrs   = ["10.0.10.0/24", "10.0.11.0/24"]
+database_subnet_cidrs  = ["10.0.20.0/24", "10.0.21.0/24"]
+single_nat_gateway     = true
+
+# Leave blank to run HTTP-only on the ALB (fine for a first test deploy).
+# Set to an ACM cert ARN in the same region as the ALB to enable HTTPS.
+acm_certificate_arn = ""
+
+cognito_domain_prefix = "bookstore-auth-changeme" # must be globally unique
+callback_urls          = ["https://your-domain.com/callback"]
+logout_urls             = ["https://your-domain.com/logout"]
+
+# CloudFront (fronts both the S3 static site and the ALB API, one distribution)
+# Leave both blank to deploy on the default *.cloudfront.net domain with no custom aliases.
+cloudfront_domain_names       = [] # e.g. ["www.your-domain.com"]
+cloudfront_acm_certificate_arn = "" # MUST be an ACM cert in us-east-1, regardless of aws_region above
+cloudfront_price_class         = "PriceClass_100"
+restrict_alb_to_cloudfront     = true
+
+product_service_image_tag = "latest"
+order_service_image_tag   = "latest"
+container_port              = 8080
+service_cpu                  = 256
+service_memory                = 512
+product_service_desired_count = 2
+order_service_desired_count    = 2
+
+db_name              = "bookstore"
+db_master_username    = "bookstore_admin"
+db_instance_class      = "db.t4g.medium"
+db_reader_count         = 2
+db_backup_retention_days = 7
+
+lambda_runtime          = "python3.12"
+sqs_visibility_timeout   = 60
+lambda_timeout            = 10
+
+enable_cloudtrail   = true
+log_retention_days  = 30
